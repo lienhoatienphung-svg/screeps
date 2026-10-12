@@ -161,6 +161,31 @@ describe('utils.memory', () => {
     expect(result).toBe(0)
   })
 
+  test('cleanMemory keeps alive creeps in memory', () => {
+    global.Memory.creeps = { aliveCreep: {}, deadCreep: {} }
+    global.Game.creeps = { aliveCreep: {} }
+    const result = utilsMemory.cleanMemory()
+    expect(result).toBe(1)
+    expect(global.Memory.creeps.aliveCreep).toBeDefined()
+    expect(global.Memory.creeps.deadCreep).toBeUndefined()
+  })
+
+  test('cleanMemory deletes safe keys not present in Game.creeps', () => {
+    global.Memory.creeps = { safeKey: {} }
+    global.Game.creeps = {}
+    const result = utilsMemory.cleanMemory()
+    expect(result).toBe(1)
+    expect(global.Memory.creeps.safeKey).toBeUndefined()
+  })
+
+  test('cleanMemory handles undefined Game.creeps entries', () => {
+    global.Memory.creeps = { creep1: {} }
+    global.Game.creeps = { creep1: undefined }
+    const result = utilsMemory.cleanMemory()
+    expect(result).toBe(1)
+    expect(global.Memory.creeps.creep1).toBeUndefined()
+  })
+
   test('getRoomMemory creates room object if not exists', () => {
     global.Memory.rooms = {}
     const result = utilsMemory.getRoomMemory('room1', 'key', 'default')
