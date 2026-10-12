@@ -65,49 +65,6 @@
         return dependencyGraphData;
     }
 
-    function spawnProcess(command, args = [], options = {}) {
-        return new Promise((resolve, reject) => {
-            const defaultOptions = {
-                cwd: process.cwd(),
-                env: process.env,
-                shell: false,
-                timeout: 30000
-            };
-
-            const spawnOptions = { ...defaultOptions, ...options };
-            let stdout = '';
-            let stderr = '';
-            let timeoutId;
-
-            const child = spawn(command, args, spawnOptions);
-
-            if (spawnOptions.timeout) {
-                timeoutId = setTimeout(() => {
-                    child.kill('SIGTERM');
-                    reject(new Error(`Process timed out after ${spawnOptions.timeout}ms`));
-                }, spawnOptions.timeout);
-            }
-
-            child.stdout.on('data', (data) => {
-                stdout += data.toString();
-            });
-
-            child.stderr.on('data', (data) => {
-                stderr += data.toString();
-            });
-
-            child.on('error', (error) => {
-                if (timeoutId) clearTimeout(timeoutId);
-                reject(error);
-            });
-
-            child.on('close', (exitCode) => {
-                if (timeoutId) clearTimeout(timeoutId);
-                resolve({ stdout, stderr, exitCode });
-            });
-        });
-    }
-
     function getLangAttribute() {
         if (typeof document !== 'undefined') {
             return document.documentElement ? (document.documentElement.getAttribute('lang') || '') : '';
