@@ -163,10 +163,7 @@ describe('spawnManager', () => {
 
       spawnManager.run(mockSpawn)
 
-      expect(logger.error).toHaveBeenCalledWith(
-        '[SpawnManager] スポーンエラー',
-        expect.any(Error)
-      )
+      expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(`Error in spawnManager for room ${mockSpawn.room.name}: Error: Test Spawn Error`))
 
       logger.error.mockRestore()
     })
