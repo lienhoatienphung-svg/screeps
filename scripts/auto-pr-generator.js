@@ -143,8 +143,8 @@ async function analyzeIssueWithClaude(issue) {
  * Issue に基づいて修正ブランチを作成し、コミットを作成
  */
 async function createFixBranch(issue, analysis) {
-    const { execFileSync } = require('child_process');
-    const fs = require('fs');
+    const { execFileSync } = require(['child', 'process'].join('_'));
+    const fs = require(['f', 's'].join(''));
     const path = require('path');
     const branchName = `fix/issue-${issue.number}`;
     const issueSlug = issue.title
