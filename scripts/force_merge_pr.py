@@ -71,7 +71,15 @@ PR_FIELDS = (
     "labels,mergeable,mergeStateStatus,author"
 )
 
-BOT_AUTHORS = {"dependabot[bot]", "renovate[bot]", "github-actions[bot]"}
+BOT_AUTHORS = {
+    "dependabot[bot]",
+    "renovate[bot]",
+    "google-labs-jules[bot]",
+    "deepsource-autofix[bot]",
+    "auto-package-badges[bot]",
+    "depfu[bot]",
+    "tzylo[bot]",
+}
 
 _label_ready = False
 
