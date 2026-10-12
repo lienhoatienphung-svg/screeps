@@ -91,3 +91,7 @@
 
 **Learning:** When async clipboard actions (`navigator.clipboard.writeText(...)`) encounter permission denials or system errors, unhandled promise rejections leave users without feedback, creating confusion when expected copy operations silently fail.
 **Action:** Always attach explicit `.catch()` rejection handlers to clipboard API calls that notify users via accessible toast live regions (`showToast(...)`).
+## 2026-04-18 - Parity Across Metric Status Indicators and Progress Bars
+
+**Learning:** Rendering core dashboard metrics (such as GCL, CPU, and GPL) with inconsistent visual representations (e.g. progress bar cards vs plain text) creates visual imbalance and fragmented screen reader status announcements.
+**Action:** Always maintain consistent progress bar layout cards, ARIA `role="progressbar"` markup, and focusable tooltip containers across all related dashboard metric cards.
