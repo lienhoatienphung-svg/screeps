@@ -163,11 +163,7 @@ describe('spawnManager', () => {
 
       spawnManager.run(mockSpawn)
 
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining(
-                    `Error in spawnManager for room ${mockSpawn.room.name}: Error: Test Spawn Error`
-        )
-      )
+      expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(`Error in spawnManager for room ${mockSpawn.room.name}: Error: Test Spawn Error`))
 
       logger.error.mockRestore()
     })
@@ -218,9 +214,7 @@ describe('spawnManager', () => {
 
       spawnManager.showStats(mockRoom)
 
-      expect(logger.info).toHaveBeenCalledWith(
-        '[SpawnManager] ルーム W1N1 のクリープ状況 (RCL 3):'
-      )
+      expect(logger.info).toHaveBeenCalledWith('[SpawnManager] ルーム W1N1 のクリープ状況 (RCL 3):')
       expect(logger.info).toHaveBeenCalledWith('  ⚠️ harvester: 0/2')
       expect(logger.info).toHaveBeenCalledWith('  ⚠️ upgrader: 0/2')
       expect(logger.info).toHaveBeenCalledWith('  ⚠️ builder: 0/2')
@@ -239,14 +233,12 @@ describe('spawnManager', () => {
         { memory: { role: 'upgrader' }, spawning: false },
         { memory: { role: 'upgrader' }, spawning: false },
         { memory: { role: 'builder' }, spawning: false },
-        { memory: { role: 'builder' }, spawning: false }
+        { memory: { role: 'builder' }, spawning: false },
       ])
 
       spawnManager.showStats(mockRoom)
 
-      expect(logger.info).toHaveBeenCalledWith(
-        '[SpawnManager] ルーム W1N1 のクリープ状況 (RCL 3):'
-      )
+      expect(logger.info).toHaveBeenCalledWith('[SpawnManager] ルーム W1N1 のクリープ状況 (RCL 3):')
       expect(logger.info).toHaveBeenCalledWith('  ✓ harvester: 2/2')
       expect(logger.info).toHaveBeenCalledWith('  ✓ upgrader: 2/2')
       expect(logger.info).toHaveBeenCalledWith('  ✓ builder: 2/2')
@@ -261,9 +253,7 @@ describe('spawnManager', () => {
       mockRoom.controller = undefined
       spawnManager.showStats(mockRoom)
 
-      expect(logger.info).toHaveBeenCalledWith(
-        '[SpawnManager] ルーム W1N1 のクリープ状況 (RCL 0):'
-      )
+      expect(logger.info).toHaveBeenCalledWith('[SpawnManager] ルーム W1N1 のクリープ状況 (RCL 0):')
       expect(logger.info).toHaveBeenCalledWith('  ⚠️ harvester: 0/2')
       expect(logger.info).toHaveBeenCalledWith('  ⚠️ upgrader: 0/1')
       expect(logger.info).toHaveBeenCalledWith('  ✓ builder: 0/0')
