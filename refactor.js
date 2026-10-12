@@ -1,7 +1,7 @@
-const fs = require('fs');
-let code = fs.readFileSync('patch_main.js', 'utf8');
-const oldMatch = code.match(/const oldCategorizeRoomStructures = `([\s\S]*?)`/);
-const newMatch = code.match(/const newCategorizeRoomStructures = `([\s\S]*?)`/);
+const fs = require('fs')
+const code = fs.readFileSync('patch_main.js', 'utf8')
+const oldMatch = code.match(/const oldCategorizeRoomStructures = `([\s\S]*?)`/)
+const newMatch = code.match(/const newCategorizeRoomStructures = `([\s\S]*?)`/)
 
 const newCode = `const fs = require('fs')
 
@@ -31,5 +31,5 @@ if (require.main === module) {
 }
 
 module.exports = runPatch
-`;
-fs.writeFileSync('patch_main.js', newCode);
+`
+fs.writeFileSync('patch_main.js', newCode)

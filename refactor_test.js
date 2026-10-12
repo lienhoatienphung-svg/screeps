@@ -1,10 +1,10 @@
-const fs = require('fs');
+const fs = require('fs')
 
-const testFile = 'tests/patch_main.test.js';
-let testCode = fs.readFileSync(testFile, 'utf8');
+const testFile = 'tests/patch_main.test.js'
+let testCode = fs.readFileSync(testFile, 'utf8')
 
 testCode = testCode.replace(
-  `    const actualFs = jest.requireActual('fs')
+    `    const actualFs = jest.requireActual('fs')
     const patchScriptContent = actualFs.readFileSync('patch_main.js', 'utf8')
 
     const oldContentMatch = patchScriptContent.match(
@@ -20,9 +20,9 @@ testCode = testCode.replace(
 
     const oldContent = oldContentMatch[1]
     const newContent = newContentMatch[1]`,
-  `    const patch = patchScript.patches[0]
+    `    const patch = patchScript.patches[0]
     const oldContent = patch.oldContent
     const newContent = patch.newContent`
-);
+)
 
-fs.writeFileSync(testFile, testCode, 'utf8');
+fs.writeFileSync(testFile, testCode, 'utf8')
