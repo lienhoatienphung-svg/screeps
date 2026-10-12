@@ -126,3 +126,8 @@ Learned that replacing Array.prototype.filter with a traditional for loop signif
 **Learning:** Building a filtered array with `Array.prototype.filter` and then calling `findClosestByRange` allocates a new array every tick for each attacker creep, adding GC pressure. A single indexed `for` loop that filters and tracks the minimum range in one pass removes the intermediate allocation.
 **Action:** Replace `filter()` + `findClosestByRange()` pairs in hot role loops with a single-pass indexed `for` loop that tracks the closest candidate.
 - In high-frequency Screeps distance calculation routines (such as selecting targets for medics), replacing `Array.prototype.findClosestByRange()` with traditional indexed `for` loops and inlined `Math.abs` distance calculations dramatically reduces per-tick overhead. In benchmarks, the manual loop runs 5x faster (23ms vs 110ms for 10000 iterations finding the closest among 1000 items).
+
+## 2026-10-07 - Direct Rampart Structure Type Querying in Tower Urgent Rampart Scan
+
+**Learning:** In `towerManager._findUrgentRampart`, calling `cache.getMyStructures(room)` without specifying `STRUCTURE_RAMPART` retrieves all owned structures (extensions, spawns, towers, links) and iterates through each to filter by structure type. Calling `cache.getMyStructures(room, STRUCTURE_RAMPART)` utilizes the structure-type cached array directly, reducing iteration complexity from $O(N_{myStructures})$ to $O(N_{ramparts})$ and eliminating type checks for non-rampart structures.
+**Action:** Pass `STRUCTURE_RAMPART` directly to `cache.getMyStructures` when searching exclusively for rampart targets.
