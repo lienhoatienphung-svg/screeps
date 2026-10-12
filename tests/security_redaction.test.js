@@ -32,4 +32,9 @@ describe('Security Redaction in deploy.js', () => {
     expect(sanitizeLog(undefined)).toBe(undefined)
     expect(sanitizeLog(123)).toBe(123)
   })
+
+  test('escapes newlines and carriage returns', () => {
+    expect(sanitizeLog('Line 1\nLine 2')).toBe('Line 1\\nLine 2')
+    expect(sanitizeLog('Line 1\r\nLine 2')).toBe('Line 1\\r\\nLine 2')
+  })
 })
