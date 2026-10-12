@@ -82,3 +82,7 @@
 
 **Learning:** Applying `role="alert"` directly to error container elements (`<main>` or `<div>`) that contain interactive controls like retry or copy `<button>` elements causes screen readers to read the container as static advisory text, suppressing button semantics and keyboard focus expectations.
 **Action:** Remove `role="alert"` from container elements enclosing buttons and rely on `aria-live="assertive"` on the container or localized error heading/text elements.
+## 2026-04-18 - Clipboard Rejection Error Feedback and Accessible Notifications
+
+**Learning:** When async clipboard actions (`navigator.clipboard.writeText(...)`) encounter permission denials or system errors, unhandled promise rejections leave users without feedback, creating confusion when expected copy operations silently fail.
+**Action:** Always attach explicit `.catch()` rejection handlers to clipboard API calls that notify users via accessible toast live regions (`showToast(...)`).

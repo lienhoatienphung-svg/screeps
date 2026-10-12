@@ -140,7 +140,7 @@ export default function Dashboard() {
                 showToast('ステータスのサマリーをクリップボードにコピーしました');
             })
             .catch(() => {
-                showToast('クリップボードへのコピーに失敗しました');
+                showToast('サマリーのコピーに失敗しました');
             });
     }, [stats, showToast]);
 
@@ -260,7 +260,7 @@ export default function Dashboard() {
                 showToast('エラーメッセージをクリップボードにコピーしました');
             })
             .catch(() => {
-                showToast('クリップボードへのコピーに失敗しました');
+                showToast('エラーメッセージのコピーに失敗しました');
             });
 
     const copyRoom = (room: string) => {
@@ -272,7 +272,7 @@ export default function Dashboard() {
                 showToast(`部屋名 ${room} をクリップボードにコピーしました`);
             })
             .catch(() => {
-                showToast('クリップボードへのコピーに失敗しました');
+                showToast(`部屋名 ${room} のコピーに失敗しました`);
             });
     };
 
@@ -285,7 +285,7 @@ export default function Dashboard() {
                 showToast('生データをクリップボードにコピーしました');
             })
             .catch(() => {
-                showToast('クリップボードへのコピーに失敗しました');
+                showToast('生データのコピーに失敗しました');
             });
     };
 
@@ -309,7 +309,7 @@ export default function Dashboard() {
                 );
             })
             .catch(() => {
-                showToast('クリップボードへのコピーに失敗しました');
+                showToast('部屋名のコピーに失敗しました');
             });
     };
 
