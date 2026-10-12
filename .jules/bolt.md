@@ -107,3 +107,5 @@
 
 **Learning:** In `role.transporter.js`, invoking native `creep.pos.findClosestByRange(targets)` invokes C++ engine wrapper allocations and callback overhead per search call. Implementing a manual single-pass indexed `for` loop with early-exit on adjacent targets (`dist <= 1`) bypasses engine marshalling overhead and cuts CPU processing time during target search.
 **Action:** Replace native `findClosestByRange` calls in high-frequency role modules with single-pass indexed `for` loops and `dist <= 1` short-circuits.
+## $(date +%Y-%m-%d) - Replace redundant room source find with cache.getSources in auto.evolution.js
+- Implemented a performance optimization by using a centralized cache (`cache.getSources(room)`) for counting sources in rooms, replacing a redundant inline caching loop over `FIND_SOURCES`.
