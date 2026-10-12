@@ -250,7 +250,7 @@ function runPatch () {
   }
 }
 
-runPatch.patches = patches
+runPatch.patches = patches;
 
 if (require.main === module) {
   runPatch()
