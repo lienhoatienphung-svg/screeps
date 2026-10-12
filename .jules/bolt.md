@@ -122,3 +122,6 @@ Learned that replacing Array.prototype.filter with a traditional for loop signif
 - Replaced `room.find` with `cache.getMyCreeps()` when checking for injured creeps to utilize existing array caches.
 - Replaced `.filter()` method with standard indexed `for` loops to reduce closure allocations during high frequency checks.
 - Baseline `~92ms`, Improved to `~15.5ms` (~83% performance gain in a benchmark of 10,000 iterations).
+## 2026-09-24 - Single-Pass Hostile Structure Selection in Attacker Role
+**Learning:** Building a filtered array with `Array.prototype.filter` and then calling `findClosestByRange` allocates a new array every tick for each attacker creep, adding GC pressure. A single indexed `for` loop that filters and tracks the minimum range in one pass removes the intermediate allocation.
+**Action:** Replace `filter()` + `findClosestByRange()` pairs in hot role loops with a single-pass indexed `for` loop that tracks the closest candidate.
