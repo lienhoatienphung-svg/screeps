@@ -1,30 +1,26 @@
 # 📈 開発・進化の記録 (Strategic Evolution Log)
 
-## CHANGELOG – 2026‑10‑12
+## 2026年10月12日　変更ログ（Release 1.2.3 予定）
 
-### 💡 主な追加・変更点
+以下は本日の重要変更点をカテゴリ別にまとめたものです。  
+変更番号はPull Request番号（#xxxx）と、簡易コミットハッシュ（7文字）で示しています。
 
-| 改善・機能 | 内容 | 変更箇所 | コミット ID |
-|------------|------|----------|-------------|
-| **GitHub Actions 更新** | `actions/github-script` を v9、`actions/checkout` を v7 に更新 (バージョン固定でCIの安定性向上) | `.github/workflows/*` | `0696312e1`, `bd608620e` |
-| **依存関係** | Babel7 を 8.0.6 から 8.0.7 にパッチ更新 | `package.json` / `yarn.lock` | `03ff04e18` |
-| **パレット UI** | クリップボード操作失敗時にトースト表示を追加<br>ダッシュボードの操作ボタンのキーボードフォーカス視覚パリティを完了 | `components/Palette/*` | `262c7f0b5`, `775c25222` |
-| **パフォーマンス** | `roleTransporter` 内の検索ロジックを最適化し、読み込み速度を向上 | `bolt/roleTransporter.js` | `878ec043c` |
-| **CI / 自動マージ** | Draft ステータスを自動で `ready` に設定、CI 成功要件を緩和<br>PR マージを古い順にスイープし、重複マージを防止 | `automerge/*` | `e1bf3f162`, `1bb25f97f`, `62db91da2` |
-| **コード品質** | TODO コメントを洗練、不要コメントを除去 | すべてのソース | `6d217c98f` |
-| **ドキュメント** | AI ドキュメンテーションの更新 (自動生成されたインテリジェンス情報を反映) | docs/ | `fcbd38495`, `8b251e1e4` |
+---
 
-### 🔒 セキュリティ修正
+### ★ 主要機能追加 (Feature)
 
-| 修正内容 | 対象ファイル | コミット ID |
-|----------|--------------|-------------|
-| `ai_branch_cleaner.py` での HTTP Header 注入と認証関連脆弱性を修正 | `ai_branch_cleaner.py` | `0329e46ee` |
-| `auto-pr-gen` のエンドポイントパス検証を実装 | `auto-pr-gen/*` | `1acb6fc47` |
+| PR | 変更概要 | アクティブ層 |
+|---|---|---|
+| #258216 | **automerge**：Draft を自動で *ready* にし、CI 全件成功の条件を外す | `feat(automerge)` |
+| #258202 | 🎨 Palette：クリップボード操作時の「拒否」フォールバックトースト追加 | `🎨 Palette` |
+| #775c25222 | Google‑Labs‑Jules：Dashboard アクションボタンのキーボードフォーカス視覚パリティを完了 | `🎨 Palette` |
+| #3d46484c8 | Experiment Bot：エネルギー効率トラッキングをランダム実験として追加 | `🎲 Random experiment` |
 
-### 🎨 UI / UX 改善
+---
 
-| 改善内容 | 対象 | コミット ID |
-|----------|------|-------------|
-| クリップボード失敗時にユーザーへのフィードバックを明示 | `Palette` | `262c7f0b5` |
-| ダッシュボードボタンのキーフォーカス視覚表現を統一 | `Palette` | `775c25222` |
-| レンダリング時の hydrate
+### 🛡️ セキュリティ・脆弱性修正
+
+| PR | 変更概要 |
+|---|---|
+| #258198 | Sentinel：`ai_branch_cleaner.py` における HTTP Header Injection と Auth の脆弱性を修正 | `🛡️ Sentinel` |
+| #258194** –
