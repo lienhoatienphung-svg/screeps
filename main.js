@@ -108,13 +108,6 @@
         });
     }
 
-    function getLangAttribute() {
-        if (typeof document !== 'undefined') {
-            return document.documentElement ? (document.documentElement.getAttribute('lang') || '') : '';
-        }
-        return '';
-    }
-
     function addLangAttribute() {
         if (typeof document !== 'undefined' && document.documentElement) {
             if (!document.documentElement.hasAttribute('lang')) {
