@@ -67,6 +67,14 @@ export default function Dashboard() {
         }, 2500);
     }, []);
 
+    const dismissToast = useCallback(() => {
+        setToastMsg(null);
+        if (toastTimeoutRef.current) {
+            clearTimeout(toastTimeoutRef.current);
+            toastTimeoutRef.current = null;
+        }
+    }, []);
+
     const showToast = useCallback(
         (msg: string) => {
             setToastMsg(msg);
@@ -1512,8 +1520,17 @@ export default function Dashboard() {
                         {toastMsg}
                     </span>
                     <kbd
-                        aria-label="Escキーで通知を閉じます"
-                        title="Esc キーで閉じる"
+                        role="button"
+                        tabIndex={0}
+                        onClick={dismissToast}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                dismissToast();
+                            }
+                        }}
+                        aria-label="Escキーまたはクリックで通知を閉じます"
+                        title="クリックまたは Esc キーで閉じる"
                         style={{
                             backgroundColor: 'rgba(255, 255, 255, 0.2)',
                             border: '1px solid rgba(255, 255, 255, 0.4)',
@@ -1523,18 +1540,13 @@ export default function Dashboard() {
                             color: 'white',
                             lineHeight: 1,
                             userSelect: 'none',
+                            cursor: 'pointer',
                         }}
                     >
                         Esc
                     </kbd>
                     <button
-                        onClick={() => {
-                            setToastMsg(null);
-                            if (toastTimeoutRef.current) {
-                                clearTimeout(toastTimeoutRef.current);
-                                toastTimeoutRef.current = null;
-                            }
-                        }}
+                        onClick={dismissToast}
                         onFocus={() => setToastCloseFocused(true)}
                         onBlur={() => setToastCloseFocused(false)}
                         onMouseEnter={() => setToastCloseFocused(true)}
@@ -1548,7 +1560,7 @@ export default function Dashboard() {
                             color: 'white',
                             cursor: 'pointer',
                             padding: '0.2rem',
-                            display: 'flex',
+                            display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: '0.8rem',
@@ -1557,6 +1569,8 @@ export default function Dashboard() {
                             outline: 'none',
                             boxShadow: toastCloseFocused ? '0 0 0 2px white' : 'none',
                             borderRadius: '4px',
+                            minWidth: '24px',
+                            minHeight: '24px',
                         }}
                     >
                         ✕
