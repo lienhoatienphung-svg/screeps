@@ -1,4 +1,4 @@
-🎯 **What:** Extracted the massive inline string replacements from the `runPatch` function in `patch_main.js` into an external `patches` array.
+🎯 **What:** Extracted the massive inline string replacements from the `runPatch` function in `patch_main.js` into an external `patches` array. Also fixed the security check failure by removing the accidental commit of the temporary `refactor.js` scripts.
 💡 **Why:** This improves the maintainability and readability of `patch_main.js`. By separating the data (the string patches) from the logic (the replacement process), it becomes much easier to add, update, or remove patches in the future without cluttering the main function body. Also updated `tests/patch_main.test.js` to reference the exported array instead of parsing the strings from the file using regex.
 ✅ **Verification:** Ran `npm test tests/patch_main.test.js` to verify functionality is preserved, and ran `npx eslint patch_main.js tests/patch_main.test.js` to ensure code style guidelines are met.
 ✨ **Result:** A cleaner, more modular patching script that is easier to maintain and test, without any changes to the underlying patching behavior.
