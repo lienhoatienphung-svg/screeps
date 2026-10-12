@@ -109,3 +109,5 @@
 **Action:** Replace native `findClosestByRange` calls in high-frequency role modules with single-pass indexed `for` loops and `dist <= 1` short-circuits.
 ## $(date +%Y-%m-%d) - Replace redundant room source find with cache.getSources in auto.evolution.js
 - Implemented a performance optimization by using a centralized cache (`cache.getSources(room)`) for counting sources in rooms, replacing a redundant inline caching loop over `FIND_SOURCES`.
+## 2024-05-23 - Use cached structures and sites in _planExtensions
+Replaced direct `room.find` calls for `STRUCTURE_EXTENSION` in `_planExtensions` with `cache.getMyStructures` and `cache.getConstructionSites`. Direct `room.find` queries bypass the cache and run every time `_planExtensions` is evaluated, consuming CPU. This optimization leverages the existing cache module.
