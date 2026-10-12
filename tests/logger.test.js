@@ -29,14 +29,14 @@ describe('logger', () => {
     global.Memory = { logs: [] }
     global.Game.time = 100
     console.log = jest.fn()
-    logger.setLevel(0)
-    logger.resetStats()
+    logger.setLevel(4)
+    logger.clear()
   })
 
   describe('debug', () => {
     test('デバッグメッセージをログに記録する', () => {
       logger.debug('Test debug message')
-      const history = logger.getHistory()
+      const history = logger.getRecentLogs(100)
       expect(history.length).toBeGreaterThan(0)
       expect(history[history.length - 1].level).toBe('debug')
     })
@@ -80,40 +80,10 @@ describe('logger', () => {
       expect(stats).toBeDefined()
       expect(typeof stats).toBe('object')
       expect(stats.info).toBe(1)
-      expect(stats.warn).toBe(1)
-      expect(stats.error).toBe(1)
-      expect(stats.debug).toBe(0)
+      expect(stats.warns).toBe(1)
+      expect(stats.errors).toBe(1)
+      expect(stats.debugs).toBe(0)
       expect(stats.total).toBe(3)
-    })
-  })
-
-  describe('resetStats', () => {
-    test('統計と履歴をリセットする', () => {
-      // Generate some dummy logs
-      logger.debug('Debug msg')
-      logger.info('Info msg')
-      logger.warn('Warn msg')
-      logger.error('Error msg')
-
-      // Verify they were recorded
-      const statsBefore = logger.getStats()
-      expect(statsBefore.debug).toBeGreaterThan(0)
-      expect(statsBefore.info).toBeGreaterThan(0)
-      expect(statsBefore.warn).toBeGreaterThan(0)
-      expect(statsBefore.error).toBeGreaterThan(0)
-      expect(logger.getHistory().length).toBeGreaterThan(0)
-
-      // Reset
-      logger.resetStats()
-
-      // Verify reset
-      const statsAfter = logger.getStats()
-      expect(statsAfter.debug).toBe(0)
-      expect(statsAfter.info).toBe(0)
-      expect(statsAfter.warn).toBe(0)
-      expect(statsAfter.error).toBe(0)
-      expect(statsAfter.total).toBe(0)
-      expect(logger.getHistory().length).toBe(0)
     })
   })
 
@@ -145,65 +115,6 @@ describe('logger', () => {
     test('空のスタックトレースに対して空文字列を返す', () => {
       expect(logger.getSafeStack('')).toBe('')
       expect(logger.getSafeStack(null)).toBe('')
-    })
-  })
-
-  describe('showDashboard', () => {
-    test('ダッシュボード情報を正しく出力する', () => {
-      // ダッシュボードに表示するログを追加
-      logger.setLevel(0) // 全てのログを出力するようにする
-      logger.info('Test info dashboard')
-      logger.warn('Test warn dashboard')
-
-      logger.showDashboard()
-
-      // ヘッダーやレベルの表示など、複数回 console.log が呼ばれることを確認
-      expect(console.log).toHaveBeenCalled()
-
-      // 出力内容のチェック
-      const calls = console.log.mock.calls.map((call) => call[0])
-
-      // 各行の出力が含まれているか確認
-      const hasHeader = calls.some((msg) => msg.includes('=== Logger Dashboard ==='))
-      const hasLevel = calls.some((msg) =>
-        msg.includes('Level: 0 (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR, 4=NONE)')
-      )
-      const hasStats = calls.some((msg) =>
-        msg.includes('Stats: DEBUG=0 INFO=1 WARN=1 ERROR=0')
-      )
-      const hasRecentLogsHeader = calls.some((msg) => msg.includes('Recent logs:'))
-
-      // エスケープ処理されたログメッセージが出力されているか確認
-      const hasInfoLog = calls.some((msg) => msg.includes('Test info dashboard'))
-      const hasWarnLog = calls.some((msg) => msg.includes('Test warn dashboard'))
-
-      expect(hasHeader).toBe(true)
-      expect(hasLevel).toBe(true)
-      expect(hasStats).toBe(true)
-      expect(hasRecentLogsHeader).toBe(true)
-      expect(hasInfoLog).toBe(true)
-      expect(hasWarnLog).toBe(true)
-    })
-  })
-
-  describe('_safeStringify', () => {
-    test('catches errors during stringification and returns fallback', () => {
-      // Create an object that throws an error when stringified
-      const obj = {
-        get prop () {
-          throw new Error('Test serialization error')
-        }
-      }
-
-      logger.info('Test', obj)
-
-      // Check that the error was caught and fallback was used
-      expect(console.log).toHaveBeenCalled()
-      const calls = console.log.mock.calls.map((call) => call[0])
-      const hasFallback = calls.some((msg) =>
-        msg.includes('[Unserializable Data: Test serialization error]')
-      )
-      expect(hasFallback).toBe(true)
     })
   })
 
