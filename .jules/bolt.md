@@ -131,3 +131,8 @@ Learned that replacing Array.prototype.filter with a traditional for loop signif
 
 **Learning:** In `towerManager._findUrgentRampart`, calling `cache.getMyStructures(room)` without specifying `STRUCTURE_RAMPART` retrieves all owned structures (extensions, spawns, towers, links) and iterates through each to filter by structure type. Calling `cache.getMyStructures(room, STRUCTURE_RAMPART)` utilizes the structure-type cached array directly, reducing iteration complexity from $O(N_{myStructures})$ to $O(N_{ramparts})$ and eliminating type checks for non-rampart structures.
 **Action:** Pass `STRUCTURE_RAMPART` directly to `cache.getMyStructures` when searching exclusively for rampart targets.
+
+## 2026-10-07 - Deferring Distance Math in Construction Site Selection and Reordering Structure Type Checks in Backup Repair
+
+**Learning:** In `_getTargetSite` (`src/roles/builder.js`), computing `creep.pos.getRangeTo(site)` before comparing priority evaluates distance math for initial higher-priority candidates that are later superseded by lower-priority-number (higher priority) candidates. Deferring distance calculations inside `priority < minPriority` and `priority === minPriority` branches eliminates redundant distance math. Additionally, reordering structure type comparisons (`s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART`) before floating-point hit calculations (`s.hits < s.hitsMax * 0.8`) in `_repairAsBackup` skips floating-point arithmetic for wall and rampart structures.
+**Action:** Defer distance math until priority conditions require range comparison, and place fast scalar/type equality checks before floating-point arithmetic.
