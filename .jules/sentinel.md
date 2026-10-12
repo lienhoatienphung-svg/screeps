@@ -113,3 +113,9 @@ Use of deprecated and predictable Math.random() for security-sensitive logic in 
 **Vulnerability:** In `utils.tasks.js`, `task.condition()` was called outside the `try...catch` block in `TaskQueue.run()`, allowing exceptions thrown inside task conditions to crash the entire task scheduler loop and bypass circuit breaker tracking.
 **Learning:** Evaluating user-supplied or dynamic callbacks outside exception handlers in task runner loops allows single-task failures to disrupt the scheduler for all subsequent tasks in the same tick.
 **Prevention:** Always enclose all callback invocations (`condition` and `action`) inside `try...catch` blocks within iteration loops, and validate numeric parameters (like `interval`) to enforce positive integers >= 1.
+
+## 2026-10-09 - [Task Queue Condition Evaluation & Interval Sanitization]
+
+**Vulnerability:** In `utils.tasks.js`, task condition callbacks (`task.condition()`) were evaluated outside the `try...catch` block in `run()`, allowing unhandled exceptions in conditions to crash the entire task queue execution loop. Additionally, non-positive or non-numeric `interval` arguments were not sanitized, leading to `NaN` modulo results and task starvation.
+**Learning:** Evaluating user-supplied or dynamic callbacks outside exception handlers in queue schedulers bypasses circuit breaker mechanisms and allows single task errors to crash all scheduled tasks.
+**Prevention:** Always wrap all task condition and execution callbacks inside `try...catch` blocks within task queue schedulers, and sanitize interval parameters to positive integers (`>= 1`).
