@@ -182,4 +182,18 @@ describe('src/utils/pathfinder', () => {
     expect(sorted).toEqual([{ x: 2, y: 2 }, { x: 5, y: 5 }, { x: 10, y: 10 }])
     expect(origin.getRangeTo).toHaveBeenCalledTimes(3)
   })
+
+  test('chebyshev distance calculates correctly', () => {
+    // Distance with different X and Y offsets (max should be chosen)
+    expect(pathfinder.chebyshev({x: 0, y: 0}, {x: 3, y: 4})).toBe(4);
+
+    // Identical points (distance 0)
+    expect(pathfinder.chebyshev({x: 5, y: 5}, {x: 5, y: 5})).toBe(0);
+
+    // Negative coordinates
+    expect(pathfinder.chebyshev({x: -2, y: 3}, {x: 1, y: -1})).toBe(4);
+
+    // Reverse order
+    expect(pathfinder.chebyshev({x: 3, y: 4}, {x: 0, y: 0})).toBe(4);
+  })
 })
