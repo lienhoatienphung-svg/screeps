@@ -11,20 +11,20 @@ scripts/force_merge_pr.py
 - ローカルの git merge / git push は行わず、GitHub API でマージする
 - マージは検証時の head SHA を指定する。検証後に PR が更新されていればマージは拒否される
 - 競合は AI や theirs で解決せず、needs-human ラベルを付けて人に渡す
-- 自動化の設定（.github/workflows/** と本スクリプト）を変える PR は自動マージしない（Bot 除く）
-- 大量の行を消す変更や、main.js から exports.loop が消える変更は保留する（Bot 除く）
+- 自動化の設定（.github/workflows/** と本スクリプト）を変える PR は自動マージしない
+- 大量の行を消す変更や、main.js から exports.loop が消える変更は保留する
 - Draft の PR は、マージ条件を満たした時点で ready にしてからマージする
 - CI の結果は判定に使わない（全件成功は満たせないことが多いため）
 - フォーク PR は対象外
-- **Bot PR（dependabot、renovate、github-actions）は保護ファイル・大量削除・main.js チェックをスキップして自動マージ**
+- **Bot PR（dependabot、renovate、google-labs-jules、deepsource-autofix、auto-package-badges、depfu、tzylo）は同じ安全チェックをパスすれば自動マージ**
 
 マージ条件（すべて満たした PR だけをマージする）:
   1. 同じリポジトリのブランチ（フォーク PR は対象外）
   2. automerge:hold / needs-human ラベルがない
-  3. 保護対象（.github/workflows/**、本スクリプト）を変更していない（Bot 除く）
-  4. 行数 50 以上のファイルの 60% 以上を削除していない（Bot 除く）
+  3. 保護対象（.github/workflows/**、本スクリプト）を変更していない
+  4. 行数 50 以上のファイルの 60% 以上を削除していない
   5. main.js を変更する場合、変更前に exports.loop があれば変更後も残っており、
-     コンフリクトマーカーがない（Bot 除く）
+     コンフリクトマーカーがない
   6. コンフリクトしていない（mergeable が CONFLICTING ではない）
   7. mergeStateStatus が CLEAN / UNSTABLE / HAS_HOOKS
      （UNSTABLE は必須でないチェックの失敗・保留を含む）
@@ -128,17 +128,16 @@ def decide(pr, files, base_lines, main_js_problem, touched):
     if labels & HOLD_LABELS:
         return "skip", f"hold label: {', '.join(sorted(labels & HOLD_LABELS))}"
 
-    # Bot PRs: skip protected files check, shrink check, main.js check
-    if not is_bot:
-        for path in paths:
-            if path.startswith(PROTECTED_PREFIXES) or path in PROTECTED_FILES:
-                return "hold", f"protected file changed: {path}"
-        for f in files:
-            base = base_lines.get(f["filename"], 0)
-            if base >= SHRINK_MIN_LINES and f.get("deletions", 0) >= SHRINK_RATIO * base:
-                return "hold", f"{f['filename']}: {f['deletions']} of {base} lines deleted"
-        if main_js_problem:
-            return "hold", main_js_problem
+    # All PRs (including bots) go through the same safety checks
+    for path in paths:
+        if path.startswith(PROTECTED_PREFIXES) or path in PROTECTED_FILES:
+            return "hold", f"protected file changed: {path}"
+    for f in files:
+        base = base_lines.get(f["filename"], 0)
+        if base >= SHRINK_MIN_LINES and f.get("deletions", 0) >= SHRINK_RATIO * base:
+            return "hold", f"{f['filename']}: {f['deletions']} of {base} lines deleted"
+    if main_js_problem:
+        return "hold", main_js_problem
 
     merge_state = pr.get("mergeStateStatus")
     mergeable = pr.get("mergeable")
