@@ -5,7 +5,6 @@
     const dependencyGraph = document.getElementById('dependencyGraph');
 
     // Import required modules
-    const { spawn } = require('child_process');
     const path = require('path');
     const fs = require('fs');
     const utils = require('./utils');
@@ -42,49 +41,6 @@
     };
 
     const pagesDir = path.join(__dirname, 'pages');
-
-    function spawnProcess(command, args = [], options = {}) {
-        return new Promise((resolve, reject) => {
-            const defaultOptions = {
-                cwd: process.cwd(),
-                env: process.env,
-                shell: false,
-                timeout: 30000
-            };
-
-            const spawnOptions = { ...defaultOptions, ...options };
-            let stdout = '';
-            let stderr = '';
-            let timeoutId;
-
-            const child = spawn(command, args, spawnOptions);
-
-            if (spawnOptions.timeout) {
-                timeoutId = setTimeout(() => {
-                    child.kill('SIGTERM');
-                    reject(new Error(`Process timed out after ${spawnOptions.timeout}ms`));
-                }, spawnOptions.timeout);
-            }
-
-            child.stdout.on('data', (data) => {
-                stdout += data.toString();
-            });
-
-            child.stderr.on('data', (data) => {
-                stderr += data.toString();
-            });
-
-            child.on('error', (error) => {
-                if (timeoutId) clearTimeout(timeoutId);
-                reject(error);
-            });
-
-            child.on('close', (exitCode) => {
-                if (timeoutId) clearTimeout(timeoutId);
-                resolve({ stdout, stderr, exitCode });
-            });
-        });
-    }
 
     function getLangAttribute() {
         if (typeof document !== 'undefined') {
