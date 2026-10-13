@@ -75,7 +75,7 @@ function run (spawn) {
       }
     }
   } catch (e) {
-    logger.error('[SpawnManager] スポーンエラー', e)
+    logger.error(`Error in spawnManager for room ${room.name}: ${e.stack}`)
   }
 }
 
