@@ -26,22 +26,9 @@ describe('patch_main.js', () => {
 
   it('should actually replace the old structure function if present', () => {
     // Read the actual patch_main.js to extract the old text so we can test the replacement
-    const actualFs = jest.requireActual('fs')
-    const patchScriptContent = actualFs.readFileSync('patch_main.js', 'utf8')
-
-    const oldContentMatch = patchScriptContent.match(
-      /const oldCategorizeRoomStructures = \`([\s\S]*?)\`;/
-    )
-    const newContentMatch = patchScriptContent.match(
-      /const newCategorizeRoomStructures = \`([\s\S]*?)\`;/
-    )
-
-    if (!oldContentMatch || !newContentMatch) {
-      throw new Error('Could not find old or new content in patch_main.js')
-    }
-
-    const oldContent = oldContentMatch[1]
-    const newContent = newContentMatch[1]
+    const patch = patchScript.patches[0]
+    const oldContent = patch.oldContent
+    const newContent = patch.newContent
 
     const prefix = 'const a = 1;\n'
     const suffix = '\nconst b = 2;'
