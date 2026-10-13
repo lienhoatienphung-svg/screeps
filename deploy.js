@@ -106,13 +106,16 @@ function sanitizeLog (str) {
     'gi'
   )
 
-  return pathRedacted.replace(secretPattern, (match, p1, p2, p3, p4, p5, p6) => {
+  const redacted = pathRedacted.replace(secretPattern, (match, p1, p2, p3, p4, p5, p6) => {
     const quote = p4 || p5
     if (quote) {
       return p1 + p3 + quote[0] + '[REDACTED]' + quote[quote.length - 1]
     }
     return p1 + p3 + '[REDACTED]'
   })
+
+  // Escape newlines to prevent log forging
+  return redacted.replace(/\r/g, '\\r').replace(/\n/g, '\\n')
 }
 
 function handleDeployResponse (res, label, resolve, reject) {
